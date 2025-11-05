@@ -21,40 +21,14 @@
   <!-- Google Sign-In API -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    .hero-text {
+    /* ===== Hero Text & Icon Fade Animation ===== */
+.hero-text, .pizza-icon {
   opacity: 0;
-  transform: translateY(20px);
-  animation: fadeSlideUp 1.5s ease-out forwards;
+  transition: opacity 1s ease-in-out;
 }
 
-.pizza-icon {
-  display: inline-block;
-  font-size: 4rem;
-  animation: bouncePizza 2s ease-in-out infinite;
-}
-
-/* Smooth slide + fade-in for the tagline */
-@keyframes fadeSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Fun bounce animation for pizza emoji 🍕 */
-@keyframes bouncePizza {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(-10deg);
-  }
-  50% {
-    transform: translateY(0) rotate(10deg);
-  }
-  75% {
-    transform: translateY(-5px) rotate(-5deg);
-  }
+.hero-text.show, .pizza-icon.show {
+  opacity: 1;
 }
   </style>
 </head>
@@ -190,6 +164,48 @@
       </article>
     </section>
   </main>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const heroText = document.querySelector(".hero-text");
+    const pizzaIcon = document.querySelector(".pizza-icon");
+
+    const items = [
+      { icon: "🍕", text: "We fill your tummy with delicious food with fast delivery" },
+      { icon: "🍔", text: "Bite into happiness with our tasty burgers!" },
+      { icon: "🍣", text: "Fresh sushi delivered straight to your door" },
+      { icon: "🍩", text: "Sweet treats that make your day better" },
+      { icon: "🥗", text: "Healthy and fresh salads made with love" },
+      { icon: "🍝", text: "Pasta perfection for every craving" }
+    ];
+
+    let index = 0;
+
+    function showNextItem() {
+      // fade out
+      heroText.classList.remove("show");
+      pizzaIcon.classList.remove("show");
+
+      setTimeout(() => {
+        // change content
+        heroText.textContent = items[index].text;
+        pizzaIcon.textContent = items[index].icon;
+
+        // fade in
+        heroText.classList.add("show");
+        pizzaIcon.classList.add("show");
+
+        // move to next
+        index = (index + 1) % items.length;
+      }, 1000); // matches fade duration
+    }
+
+    // initial display
+    showNextItem();
+    setInterval(showNextItem, 3000); // change every 3 seconds
+  });
+</script>
+
 
   <script src="../js/auth.js" type="module"></script>
   <script src="../js/cursor.js"></script>
