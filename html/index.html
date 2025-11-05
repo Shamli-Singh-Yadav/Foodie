@@ -2,410 +2,236 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodie</title>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"></script>
+<script src="../js/auth.js" type="module"></script>
 
-    <!-- Description -->
-    <meta name="description"
-        content="Experience fast, reliable food delivery with a personalized touch. Our app combines advanced algorithms with vibrant design to bring delicious meals right to your door.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foodie | Login & Sign Up</title>
+  <link rel="icon" href="../imgs/favicon.png" type="image/png" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="../imgs/favicon.png" type="image/png" />
+  <!-- meta tags omitted for brevity -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/signUp.css" />
+  <link rel="stylesheet" href="../css/cursor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- CSS link -->
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="stylesheet" href="../css/cursor.css">
+  <!-- Google Sign-In API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    .hero-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      transition: background 1.5s ease;
+      color: #000;
+      text-align: center;
+      position: relative;
+    }
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      transition: color 1s ease;
+    }
 
-    <!-- Swiper.js CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    .hero-section p {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #000;
+      margin-bottom: 20px;
+      transition: opacity 1s ease;
+    }
 
-    <!-- AOS for animations -->
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    .hero-section .emoji {
+      font-size: 3rem;
+      transition: transform 0.5s ease, opacity 0.8s ease;
+      animation: pulse 2s infinite ease-in-out;
+    }
 
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+  </style>
 </head>
 
 <body>
-    <!-- UNIVERSAL NAVBAR -->
-    <header>
-        <nav class="navbar flex between wrapper">
-            <div class="logo">Foodie.</div>
+  <a href="index.html" class="back-home" aria-label="Back to Home">
+    <span class="icon">←</span> Back to Home
+  </a>
 
-            <!-- DESKTOP MENU -->
-            <ul class="navList flex gap-3 between">
-                <li><a class="active" href="./index.html#home" data-i18n="nav.home">Home</a></li>
-                <li><a href="./index.html#services" data-i18n="nav.services">Services</a></li>
-                <li><a href="./menu.html" data-i18n="nav.menu">Menu</a></li>
-                <li><a href="./aboutUs.html" data-i18n="nav.about">About Us</a></li>
-                <li><a href="./contactUs.html" data-i18n="nav.contact">Contact Us</a></li>
-                <li><a href="nearbyres.html" data-i18n="nav.nearby">Nearby Restaurants</a></li>
-            </ul>
-            <div class="desktop-action flex gap-2">
-                <!-- Language Selector -->
-                <div class="language-selector">
-                    <select id="language-select">
-                        <option value="en">English</option>
-                        <option value="hi">हिंदी</option>
-                    </select>
-                </div>
+  <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+    <i class="fa-solid fa-moon"></i>
+  </button>
 
-                <!-- Search Input -->
-                <form class="navbar-search" action="#" method="get">
-                    <input type="text" name="search" id="navbar-search" data-i18n="[placeholder]nav.searchPlaceholder"
-                        aria-label="Search menu items">
-                    <button type="submit" id="navbar-search-btn" data-i18n-aria-label="nav.search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
+  <main class="cont">
+    <div class="container">
+    <div class="hero-section" id="heroSection">
+      <h1>Foodie.</h1>
+      <p id="tagline">Love at first bite</p>
+      <div class="emoji" id="emoji">🍕</div>
+    </div>
 
-                <!-- Theme toggle -->
-                <button class="desktop-action theme-toggle" data-i18n-aria-label="nav.toggleDarkMode">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
+    <section class="form-section" aria-label="Login and Sign Up Forms">
+      <!-- Login Form -->
+      <article id="loginForm" class="auth-container active" aria-labelledby="loginTitle">
+        <h2 id="loginTitle">Welcome Back</h2>
+        <p class="subtitle">Login to your account to continue ordering</p>
 
-                <!-- Cart Icon -->
-                <a href="./checkout.html" class="cart-icon">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-value">0</span>
-                </a>
+        <div class="divider"><span>OR</span></div>
 
-                <!-- Sign-in button -->
-                <a href="./signup.html" class="btn" data-i18n="nav.signIn">
-                    Sign in&nbsp;<i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </a>
+        <form onsubmit="handleLogin(event)" aria-label="Login Form">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="your@email.com" required />
+          </div>
 
-                <!-- Hamburger -->
-                <a href="#" class="hamberger"><i class="fa-solid fa-bars"></i></a>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-field">
+              <input type="password" id="loginPassword" placeholder="Enter your password" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')"
+                aria-label="Toggle password visibility">
+                👁️
+              </button>
             </div>
+          </div>
 
+          <div class="forgot-password">
+            <a href="forgot-password.html">Forgot Password?</a>
+          </div>
 
-            <!-- MOBILE MENU -->
-            <ul class="mobile-menu">
-                <li><a class="active" href="./index.html#home" data-i18n="nav.home">Home</a></li>
-                <li><a href="./index.html#services" data-i18n="nav.services">Services</a></li>
-                <li><a href="./menu.html" data-i18n="nav.menu">Menu</a></li>
-                <li><a href="./aboutUs.html" data-i18n="nav.about">About Us</a></li>
-                <li><a href="./contactUs.html" data-i18n="nav.contact">Contact Us</a></li>
-                <li><a href="nearbyres.html" data-i18n="nav.nearby">Nearby Restaurants</a></li>
-                 <!-- Search Input -->
-                <form class="navbar-search" action="#" method="get">
-                    <input type="text" name="search" id="navbar-search" data-i18n="[placeholder]nav.searchPlaceholder"
-                        aria-label="Search menu items">
-                    <button type="submit" id="navbar-search-btn" data-i18n-aria-label="nav.search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-                <li>
-                    <button class="theme-toggle mobile-theme-toggle" data-i18n-aria-label="nav.toggleDarkMode">
-                        <i class="fa-solid fa-moon"></i><span data-i18n="nav.darkMode">Dark Mode</span>
-                    </button>
-                </li>
-                <li>
-                    <a href="./signup.html" class="btn" data-i18n="nav.signIn">
-                        Sign in&nbsp;<i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+          <div class="checkbox-group">
+            <input type="checkbox" id="rememberMe" />
+            <label for="rememberMe">Remember me</label>
+          </div>
 
-    <!-- MAIN SECTION -->
-    <main>
-        <!-- HERO SECTION -->
-        <section id="home">
-            <div class="hero-section flex wrapper">
-                <div class="content" data-aos="fade-right">
-                    <h1 data-i18n="hero.title">Enjoy Your Delicious <span data-i18n="hero.highlight">Food</span></h1>
-                    <p class="para" data-i18n="hero.subtitle">We will fill your tummy with delicious food with fast delivery</p>
-                    <div class="flex gap-2">
-                        <a href="./menu.html" class="place-order-btn btn" data-i18n="hero.orderNow">Order now</a>
-                    </div>
-                </div>
-                <div class="image-container" data-aos="fade-left">
-                    <img src="../imgs/delivery-boy.png" alt="Delivery boy delivering food" class="pizza-boy">
-                </div>
+          <button type="submit" class="btn">Login</button>
+        </form>
+
+        <p class="switch-form">
+          Don't have an account? <a onclick="switchForm('signup')">Sign Up</a>
+        </p>
+         <div class="divider"><span>OR</span></div>
+
+        <!-- Google Sign-In button after switch text -->
+       <!-- Google Sign-In button after switch text -->
+<div class="social-login" aria-label="Google Sign-In">
+  <div id="loginGoogleBtn"></div>
+</div>
+
+<!-- Phone Number Login Button (same size as Google) -->
+<div class="social-login" aria-label="Phone Login">
+  <button type="button" class="btn phone-login" onclick="loginWithPhone()">
+    <i class="fa-solid fa-phone"></i> Continue with Phone Number
+  </button>
+</div>
+
+<!-- Firebase requires this invisible div for reCAPTCHA -->
+<div id="recaptcha-container"></div>
+
+      </article>
+
+      <!-- Sign Up Form -->
+      <article id="signupForm" class="auth-container" aria-labelledby="signupTitle">
+        <h2 id="signupTitle">Create Account</h2>
+        <p class="subtitle">Sign up to start ordering delicious food</p>
+
+        <div class="divider"><span>OR</span></div>
+
+        <form onsubmit="handleSignup(event)" aria-label="Sign Up Form">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" placeholder="John Doe" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="your@email.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPhone">Phone Number</label>
+            <input type="tel" id="signupPhone" placeholder="+91 12345 67890" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <div class="password-field">
+              <input type="password" id="signupPassword" placeholder="Create a password" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')"
+                aria-label="Toggle password visibility">
+                👁️
+              </button>
             </div>
-        </section>
+          </div>
 
-        <!-- SERVICES SECTION -->
-        <section id="services">
-            <div class="wrapper p-top" data-aos="fade-up">
-                <div class="text-center">
-                    <h5 data-i18n="services.sectionTitle">Our Services</h5>
-                    <h2 data-i18n="services.mainTitle">How does it work?</h2>
-                </div>
-                <div class="flex text-center gap-4 mt-4">
-                    <div class="srevice-card" data-aos="zoom-in" data-aos-delay="100">
-                        <div>
-                            <img src="../imgs/easy-to-order.png" alt="Easy food ordering">
-                        </div>
-                        <h3 data-i18n="services.easyOrder.title">Easy to Order</h3>
-                        <p data-i18n="services.easyOrder.description">You only need a few steps in ordering food.</p>
-                    </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="agreeTerms" required />
+            <label for="agreeTerms">I agree to the Terms & Conditions</label>
+          </div>
 
-                    <div class="srevice-card" data-aos="zoom-in" data-aos-delay="200">
-                        <div>
-                            <img src="../imgs/fast-delivery.png" alt="Fast food delivery">
-                        </div>
-                        <h3 data-i18n="services.fastDelivery.title">Fast delivery</h3>
-                        <p data-i18n="services.fastDelivery.description">Delivery that is always on time, even faster.</p>
-                    </div>
+          <button type="submit" class="btn">Create Account</button>
+        </form>
 
-                    <div class="srevice-card" data-aos="zoom-in" data-aos-delay="300">
-                        <div>
-                            <img src="../imgs/best-quality.png" alt="High-quality food service">
-                        </div>
-                        <h3 data-i18n="services.bestQuality.title">Best quality</h3>
-                        <p data-i18n="services.bestQuality.description">Not only fast, for us quality is number one.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <p class="switch-form">
+          Already have an account? <a onclick="switchForm('login')">Login</a>
+        </p>
 
-        <!-- review section -->
-        <section>
-            <div class="wrapper p-top flex gap-3" data-aos="fade-up">
-                <div class="image-container" data-aos="fade-right">
-                    <img src="../imgs/delivery-boy-with-phone.png" alt="Delivery boy checking orders on a smartphone">
-                </div>
-                <div class="review-container" data-aos="fade-left">
-                    <h5 data-i18n="reviews.sectionTitle">Our reviews</h5>
-                    <h2 data-i18n="reviews.mainTitle">what they say</h2>
-                    <div class="swiper mySwiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="flex gap-3 mt-4">
-                                    <div class="profile">
-                                        <img src="../imgs/profile1.jpeg" alt="Deepak Kumar">
-                                    </div>
-                                    <div class="">
-                                        <h4>Deepak Kumar</h4>
-                                        <div class="star mt-half">
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="para">Foodie is the best! Besides the many delicious meals, the service is
-                                    excellent—especially the fast delivery. I highly recommend Foodie to you.
-                                </p>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="flex gap-3 mt-4">
-                                    <div class="profile">
-                                        <img src="../imgs/profile2.jpeg" alt="Priya Roy">
-                                    </div>
-                                    <div class="">
-                                        <h4>Priya Roy</h4>
-                                        <div class="star mt-half">
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="para">Fresh ingredients, a creative menu, and warm service
-                                    make this spot a hidden gem. Perfect from casual dinners or special nights out.
-                                    Truly a foodie's paradise!
-                                </p>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="flex gap-3 mt-4">
-                                    <div class="profile">
-                                        <img src="../imgs/profile3.jpeg" alt="Anjali Joshi">
-                                    </div>
-                                    <div class="">
-                                        <h4>Anjali Joshi</h4>
-                                        <div class="star mt-half">
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                            <i class="fa-solid fa-star highlighted-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="para">Had an amazing time here!
-                                    The food was bursting with flavor, the ambiance was warm and inviting,
-                                    and the staff made us feel truly welcome.
-                                    Every dish was a delight—definitely a spot I’ll be coming back to.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex between mt-4">
-                            <a href="#" class="arrow"><i class="fa-solid fa-arrow-left"></i></a>
-                            <a href="#" class="arrow"><i class="fa-solid fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 04 -->
-        <section id="about">
-            <div class="wrapper p-top " data-aos="fade-up">
-                <div class="app-container flex gap-3">
-                    <div class="app-image" data-aos="fade-right">
-                        <img src="../imgs/mobile-app.png" alt="Food delivery mobile app interface">
-                    </div>
-                    <div class="content" data-aos="fade-left">
-                        <h5 data-i18n="app.sectionTitle">Our Application</h5>
-                        <h2 data-i18n="app.mainTitle">Simple way to <br> order your food</h2>
-                        <p class="para" data-i18n="app.description">Crave it. Find it. Get it fast wherever, whenever.</p>
-                        <a href="#" class="btn" data-i18n="app.installButton">Install the app</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 05 -->
-        <section>
-            <div class="wrapper p-top" data-aos="zoom-in">
-                <div class="text-center">
-                    <h5 data-i18n="newsletter.sectionTitle">Our Subscribe</h5>
-                    <h2 data-i18n="newsletter.mainTitle">Subscribe to Our newsletter</h2>
-                    <p class="para m-auto" data-i18n="newsletter.description">We recommend you to Subscribe our newsletter,
-                        drop you email below to get daily update about us.</p>
-
-                    <form id="newsletterForm" class="input-container flex" data-aos="fade-up" data-aos-delay="200">
-                        <input type="email" name="email" id="email" data-i18n="[placeholder]newsletter.placeholder" placeholder="Enter your email address"
-                            autocomplete="off" required>
-                        <button type="submit" class="btn" data-i18n="newsletter.subscribeButton">Subscribe</button>
-                    </form>
-                    <span class="error-message" id="emailError"></span>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer id="contacts" data-aos="fade-up">
-        <div class="footer-container">
-            <div class="flex wrapper gap-4">
-                <div class="footer-wrapper">
-                    <a href="#" class="logo">Foodie.</a>
-                    <p class="mt-one" data-i18n="footer.description">We will fill your tummy with delicious <br>food with fast delivery</p>
-                    <div class="media flex gap-2 mt-one">
-                        <a href="https://github.com/janavipandole" class="social-media">
-                            <img src="../imgs/GitHub.png" alt="GitHub social icon in footer">
-                        </a>
-                        <a href="https://www.linkedin.com/in/janavi-pandole-80a7b2290" class="social-media linkdin">
-                            <img src="../imgs/linkdin.png" alt="LinkedIn social icon in footer">
-                        </a>
-                        <a href="https://www.youtube.com/@JanaviPandole" class="social-media">
-                            <img src="../imgs/youtube.png" alt="YouTube social icon in footer">
-                        </a>
-                        <a href="https://x.com/JanaviPandole" class="social-media">
-                            <img src="../imgs/twitter.png" alt="Twitter social icon in footer">
-                        </a>
-                    </div>
-                </div>
-
-                <ul class="footer-wrapper">
-                    <li>
-                        <h4 data-i18n="footer.ourMenu">Our Menu</h4>
-                    </li>
-                    <li class="mt-one"><a href="Special-dishes·.html" class="footer-link" data-i18n="footer.special">Special</a></li>
-                    <li class="mt-one"><a href="popular.html" class="footer-link" data-i18n="footer.popular">Popular</a></li>
-                    <li class="mt-one"><a href="../HTML/index.html" class="footer-link" data-i18n="footer.category">Category</a></li>
-                </ul>
-
-                <ul class="footer-wrapper">
-                    <li>
-                        <h4 data-i18n="footer.company">Company</h4>
-                    </li>
-                    <li class="mt-one"><a href="#" class="footer-link" data-i18n="footer.whyFoodie"> Why Foodie</a></li>
-                    <li class="mt-one"><a href="../HTML/PartnerWithUs.html" class="footer-link" data-i18n="footer.partnerWithUs"> Partner with us</a>
-                    </li>
-                    <li class="mt-one"><a href="../HTML/aboutUs.html" class="footer-link" data-i18n="footer.aboutUs"> About us </a></li>
-                    <li class="mt-one"><a href="faq-page.html" class="footer-link" data-i18n="footer.faq"> FAQ's</a></li>
-                </ul>
-
-                <ul class="footer-wrapper">
-                    <li>
-                        <h4 data-i18n="footer.support">Support</h4>
-                    </li>
-                    <li class="mt-one"><a href="../HTML/signup.html" class="footer-link" data-i18n="footer.account">Account</a></li>
-                    <li class="mt-one"><a href="../HTML/supportCenter.html" class="footer-link" data-i18n="footer.supportCenter"> Support center </a>
-                    </li>
-                    <li class="mt-one"><a href="../HTML/feedback.html" class="footer-link" data-i18n="footer.feedback"> Feedback</a></li>
-                    <li class="mt-one"><a href="../HTML/contactUs.html" class="footer-link" data-i18n="footer.contactUs">Contact Us</a></li>
-                </ul>
-            </div>
+        <!-- Google Sign-Up button after switch text -->
+        <div class="social-login" aria-label="Google Sign-Up">
+          <div id="signupGoogleBtn"></div>
         </div>
-    </footer>
+      </article>
+    </section>
+  </main>
 
-    <a href="#home" class="back-to-top" aria-label="Back to top">
-        <i class="fa-solid fa-arrow-up"></i>
-    </a>
 
-    <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/cursor.js"></script>
-    <script>
-        (function () {
-            const backToTop = document.querySelector('.back-to-top');
-            if (!backToTop) return;
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 400) backToTop.classList.add('visible');
-                else backToTop.classList.remove('visible');
-            });
-            backToTop.addEventListener('click', e => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
+  <script>
+    const hero = document.getElementById("heroSection");
+    const tagline = document.getElementById("tagline");
+    const emoji = document.getElementById("emoji");
 
-    <!-- AOS for Animations -->
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1000,     // Animation duration (1s)
-            easing: 'ease-out', // Smooth easing
-            once: true,         // Animate only once per element
-            offset: 100         // Offset from bottom before trigger
-        });
-    </script>
+    const variations = [
+      { emoji: "🍕", text: "Love at first bite", gradient: "linear-gradient(135deg, #ff9f1c, #ffbf69)" },
+      { emoji: "🍔", text: "Juicy & loaded with flavor", gradient: "linear-gradient(135deg, #ff4e00, #ec9f05)" },
+      { emoji: "🍣", text: "Fresh rolls, happy souls", gradient: "linear-gradient(135deg, #00b4db, #0083b0)" },
+      { emoji: "🍰", text: "Sweet dreams served daily", gradient: "linear-gradient(135deg, #ff99ac, #ffdde1)" },
+      { emoji: "🥗", text: "Fresh, light & right", gradient: "linear-gradient(135deg, #56ab2f, #a8e063)" },
+      { emoji: "🌮", text: "Taco about happiness", gradient: "linear-gradient(135deg, #ffb75e, #ed8f03)" }
+    ];
 
-    <script src="../js/newsletter.js"></script>
+    let index = 0;
 
-    <!-- Search Redirect Script -->
-      <!-- Search Redirect Script -->
-    <script>
-        (function() {
-            // Handle search form submission - redirect to menu.html with search query
-            const searchForms = document.querySelectorAll('.navbar-search');
-            
-            searchForms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const searchInput = form.querySelector('input[name="search"]');
-                    const query = searchInput.value.trim();
-                    
-                    if (query) {
-                        window.location.href = `./menu.html?search=${encodeURIComponent(query)}`;
-                    } else {
-                        window.location.href = './menu.html';
-                    }
-                });
-            });
-        })();
-    </script>
+    function changeHero() {
+      index = (index + 1) % variations.length;
+      const { emoji: newEmoji, text, gradient } = variations[index];
+      hero.style.background = gradient;
+      tagline.style.opacity = 0;
+      emoji.style.opacity = 0;
+
+      setTimeout(() => {
+        tagline.textContent = text;
+        emoji.textContent = newEmoji;
+        tagline.style.opacity = 1;
+        emoji.style.opacity = 1;
+      }, 400);
+    }
+
+    setInterval(changeHero, 3000);
+  </script>
+
+  <script src="../js/auth.js" type="module"></script>
+  <script src="../js/cursor.js"></script>
 
 </body>
 
 </html>
+
